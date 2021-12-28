@@ -1,12 +1,12 @@
 import javax.swing.*;
 
-public class Snake extends JFrame {
-  private Snake() {
+public class Game extends JFrame {
+  private Game() {
     initFrame();
   }
 
   public static void main(String[] args) {
-    JFrame game = new Snake();
+    JFrame game = new Game();
     game.setVisible(true);
   }
 
@@ -14,7 +14,7 @@ public class Snake extends JFrame {
     setTitle("JavaSnake");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    add(new Gameboard());
+    add(new Board());
     pack();
     setResizable(false);
     setLocationRelativeTo(null);
