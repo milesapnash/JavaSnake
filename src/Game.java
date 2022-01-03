@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class Game extends JFrame {
   private Game() {
@@ -13,6 +14,7 @@ public class Game extends JFrame {
   private void initFrame() {
     setTitle("JavaSnake");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setIconImage(Toolkit.getDefaultToolkit().getImage("icon.jpg"));
 
     add(new Board());
     pack();
