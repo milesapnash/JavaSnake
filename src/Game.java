@@ -14,7 +14,7 @@ public class Game extends JFrame {
   private void initFrame() {
     setTitle("JavaSnake");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setIconImage(Toolkit.getDefaultToolkit().getImage("icon.jpg"));
+    setIconImage(Toolkit.getDefaultToolkit().getImage("icon.png"));
 
     add(new Board());
     pack();

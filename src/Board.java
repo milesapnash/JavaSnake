@@ -94,7 +94,7 @@ public class Board extends JPanel implements ActionListener {
       for (int y = 0; y < PIXEL_HEIGHT; y++){
         final Color pixel = switch (grid[x][y]) {
           case CLEAR -> new Color(0, 0, 0);
-          case SNAKE -> new Color(0, 180, 0);
+          case SNAKE -> new Color(14, 192, 14);
           case LEMON -> new Color(255, 255, 0);
         };
         g2D.setPaint(pixel);
@@ -153,8 +153,7 @@ public class Board extends JPanel implements ActionListener {
       snake.get(i).setLocation(snake.get(i - 1));
     }
     if (growSnake) {
-      snake.add(tail);
-      setGridPoint(tail, Status.SNAKE);
+      addToSnake(tail);
     }
   }
 
