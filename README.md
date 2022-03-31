@@ -1,2 +1,2 @@
 # JavaSnake
-A simple game of Snake implemented with Java, using a 2D-Array of pixels to represent the board
+A simple game of Snake, implemented in Java using the javax.swing library
