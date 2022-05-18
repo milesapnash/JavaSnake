@@ -5,7 +5,7 @@ public class Window extends JFrame {
   public Window() {
     setTitle("JavaSnake");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setIconImage(Toolkit.getDefaultToolkit().getImage("icon.png"));
+    setIconImage(Toolkit.getDefaultToolkit().getImage("images/icon.png"));
 
     add(new Board());
     pack();
