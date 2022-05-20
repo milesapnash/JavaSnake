@@ -46,4 +46,8 @@ public class Snake {
       body.add(tail);
     }
   }
+
+  public int growth() {
+    return body.size() - 3;
+  }
 }

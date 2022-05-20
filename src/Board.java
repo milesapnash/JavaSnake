@@ -22,11 +22,10 @@ public class Board extends JPanel implements ActionListener {
 
   private final Timer timer = new Timer(TICK_RATE, this);
   private final Point lemon = new Point();
-  private Snake snake;
   private Orientation direction;
   private Orientation nextDirection;
+  private Snake snake;
   private boolean gameOver;
-  private int points;
   private int highScore;
 
   public Board() {
@@ -42,7 +41,6 @@ public class Board extends JPanel implements ActionListener {
     direction = Orientation.UP;
     nextDirection = direction;
     gameOver = false;
-    points = 0;
     highScore = -1;
     newLemonLocation();
     timer.start();
@@ -64,7 +62,7 @@ public class Board extends JPanel implements ActionListener {
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
     if (gameOver){
-      getHighScore();
+      updateHighScore();
       displayGameOver(g);
     } else {
       paintPixels(g);
@@ -74,14 +72,14 @@ public class Board extends JPanel implements ActionListener {
   private void paintPixels(Graphics g){
     Graphics2D g2D = (Graphics2D) g;
 
-    g2D.setPaint(new Color(250, 255, 10));
-    g2D.fillRect(lemon.x * PIXEL_SIZE, lemon.y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
-
     g2D.setPaint(new Color(255, 255, 255));
     g2D.fillRect(0, BOARD_HEIGHT, BOARD_WIDTH, 7 * PIXEL_SIZE);
 
     g2D.setPaint(new Color(0, 0, 0));
     translatePoints(g2D);
+
+    g2D.setPaint(new Color(250, 255, 10));
+    g2D.fillRect(lemon.x * PIXEL_SIZE, lemon.y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
 
     g2D.setPaint(new Color(14, 200, 10));
     for (Point point : snake.getBody()) {
@@ -94,7 +92,6 @@ public class Board extends JPanel implements ActionListener {
     if (!gameOver){
       boolean growSnake = false;
       if (lemon.equals(snake.getHead())){
-        points++;
         newLemonLocation();
         growSnake = true;
       } else if (snake.eatingSelf()){
@@ -108,7 +105,8 @@ public class Board extends JPanel implements ActionListener {
   }
 
   private void translatePoints(Graphics2D g2D){
-    int pointsRemainder = points % 10;
+    final int points = snake.growth();
+    final int pointsRemainder = points % 10;
     if (points > 99){
       displayPoints(PixelPoints.values()[points / 100], g2D, (int) (BOARD_WIDTH / 2 - 5.5 * PIXEL_SIZE));
       displayPoints(PixelPoints.values()[(points / 10) % 10], g2D, (int) (BOARD_WIDTH / 2 - PIXEL_SIZE * 1.5));
@@ -150,7 +148,8 @@ public class Board extends JPanel implements ActionListener {
     }
   }
 
-  private void getHighScore(){
+  private void updateHighScore(){
+    final int points = snake.growth();
     if (highScore < points) {
       final String root = "highscore.txt";
       if (new File(root).exists()){
@@ -219,7 +218,6 @@ public class Board extends JPanel implements ActionListener {
     private final boolean[][] graphics;
 
     PixelPoints(boolean[][] graphics) {this.graphics = graphics;}
-
     }
 
   private class DirectionAdapter extends KeyAdapter {
@@ -227,21 +225,25 @@ public class Board extends JPanel implements ActionListener {
     public void keyPressed(KeyEvent e) {
       switch (e.getKeyCode()){
         case (KeyEvent.VK_DOWN):
+        case (KeyEvent.VK_S):
           if (direction != Orientation.UP) {
             nextDirection = Orientation.DOWN;
           }
           break;
         case (KeyEvent.VK_UP):
+        case (KeyEvent.VK_W):
           if (direction != Orientation.DOWN) {
             nextDirection = Orientation.UP;
           }
           break;
         case (KeyEvent.VK_LEFT):
+        case (KeyEvent.VK_A):
           if (direction != Orientation.RIGHT) {
             nextDirection = Orientation.LEFT;
           }
           break;
         case (KeyEvent.VK_RIGHT):
+        case (KeyEvent.VK_D):
           if (direction != Orientation.LEFT) {
             nextDirection = Orientation.RIGHT;
           }
@@ -251,6 +253,8 @@ public class Board extends JPanel implements ActionListener {
             initBoard();
           }
           break;
+        case (KeyEvent.VK_ESCAPE):
+          System.exit(0);
       }
     }
   }
