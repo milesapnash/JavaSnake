@@ -2,6 +2,7 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.Random;
 
+/** The snake, constructed in terms of the board size. */
 public class Snake {
   private final Point head;
   private final LinkedList<Point> body = new LinkedList<>();
@@ -28,6 +29,7 @@ public class Snake {
     return body.contains(point);
   }
 
+  /** Determines if the snake's head is touching any other part of the body. */
   public boolean eatingSelf() {
     for (int i = 1; i < body.size(); i++) {
       if (head.equals(body.get(i))) {
@@ -37,6 +39,10 @@ public class Snake {
     return false;
   }
 
+  /**
+   * Moves each point of the snake's body to the preceding point's location. Adds a new point to the
+   * body if the snake is growing.
+   */
   public void changePosition(boolean growing) {
     Point tail = new Point(body.getLast());
     for (int i = body.size() - 1; i > 0; i--) {
@@ -47,6 +53,7 @@ public class Snake {
     }
   }
 
+  /** Returns the difference in size of the body from the original length. */
   public int growth() {
     return body.size() - 3;
   }

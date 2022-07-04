@@ -11,90 +11,69 @@ import java.nio.file.Path;
 import java.util.Random;
 
 public class Board extends JPanel implements ActionListener {
+  private final int TICK_RATE = 80;
   private final int BOARD_WIDTH = 480;
   private final int BOARD_HEIGHT = 480;
   private final int PIXEL_SIZE = 24;
   private final int COMPONENT_HEIGHT = BOARD_HEIGHT + 7 * PIXEL_SIZE;
-  private final int TICK_RATE = 90;
   private final int PIXEL_WIDTH = BOARD_WIDTH / PIXEL_SIZE;
   private final int PIXEL_HEIGHT = BOARD_HEIGHT / PIXEL_SIZE;
   private final int BORDERED_PIXEL_SIZE = PIXEL_SIZE - 1;
 
   private final Timer timer = new Timer(TICK_RATE, this);
   private final Point lemon = new Point();
+
   private Orientation direction;
   private Orientation nextDirection;
   private Snake snake;
   private boolean gameOver;
+  private boolean paused;
   private int highScore;
 
+  /** A board to display the game and deal with user input. */
   public Board() {
     addKeyListener(new DirectionAdapter());
     setPreferredSize(new Dimension(BOARD_WIDTH, COMPONENT_HEIGHT));
     setBackground(Color.BLACK);
     setFocusable(true);
+
     initBoard();
   }
 
+  /** Resets fields of the board for a new game. */
   private void initBoard() {
     snake = new Snake(PIXEL_WIDTH, PIXEL_HEIGHT);
     direction = Orientation.UP;
     nextDirection = direction;
     gameOver = false;
+    paused = false;
     highScore = -1;
     newLemonLocation();
     timer.start();
   }
 
-  private void newLemonLocation(){
+  /** Sets the lemon to a new point on the board that isn't part of the snake. */
+  private void newLemonLocation() {
     while (true) {
       final int newX = new Random().nextInt(PIXEL_WIDTH);
       final int newY = new Random().nextInt(PIXEL_HEIGHT);
       final Point newP = new Point(newX, newY);
-      if (!snake.containsPoint(newP)){
+      if (!snake.containsPoint(newP)) {
         lemon.setLocation(newX, newY);
         return;
       }
     }
   }
 
-  @Override
-  public void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    if (gameOver){
-      updateHighScore();
-      displayGameOver(g);
-    } else {
-      paintPixels(g);
-    }
-  }
-
-  private void paintPixels(Graphics g){
-    Graphics2D g2D = (Graphics2D) g;
-
-    g2D.setPaint(new Color(255, 255, 255));
-    g2D.fillRect(0, BOARD_HEIGHT, BOARD_WIDTH, 7 * PIXEL_SIZE);
-
-    g2D.setPaint(new Color(0, 0, 0));
-    translatePoints(g2D);
-
-    g2D.setPaint(new Color(250, 255, 10));
-    g2D.fillRect(lemon.x * PIXEL_SIZE, lemon.y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
-
-    g2D.setPaint(new Color(14, 200, 10));
-    for (Point point : snake.getBody()) {
-      g2D.fillRect(point.x * PIXEL_SIZE, point.y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
-    }
-  }
-
+  /** Game management code, running with each tick. */
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (!gameOver){
+    if (!gameOver) {
       boolean growSnake = false;
-      if (lemon.equals(snake.getHead())){
+      if (lemon.equals(snake.getHead())) {
         newLemonLocation();
         growSnake = true;
-      } else if (snake.eatingSelf()){
+      } else if (snake.eatingSelf()) {
         gameOver = true;
         timer.stop();
       }
@@ -104,33 +83,8 @@ public class Board extends JPanel implements ActionListener {
     repaint();
   }
 
-  private void translatePoints(Graphics2D g2D){
-    final int points = snake.growth();
-    final int pointsRemainder = points % 10;
-    if (points > 99){
-      displayPoints(PixelPoints.values()[points / 100], g2D, (int) (BOARD_WIDTH / 2 - 5.5 * PIXEL_SIZE));
-      displayPoints(PixelPoints.values()[(points / 10) % 10], g2D, (int) (BOARD_WIDTH / 2 - PIXEL_SIZE * 1.5));
-      displayPoints(PixelPoints.values()[pointsRemainder], g2D, (int) (BOARD_WIDTH / 2 + 2.5 * PIXEL_SIZE));
-    } else if (points > 9){
-      displayPoints(PixelPoints.values()[points / 10], g2D, (int) (BOARD_WIDTH / 2 - 3.5 * PIXEL_SIZE));
-      displayPoints(PixelPoints.values()[pointsRemainder], g2D, (int) (BOARD_WIDTH / 2 + 0.5 * PIXEL_SIZE));
-    } else {
-      displayPoints(PixelPoints.values()[pointsRemainder], g2D, (int) (BOARD_WIDTH / 2 - PIXEL_SIZE * 1.5));
-    }
-  }
-
-  private void displayPoints(PixelPoints val, Graphics2D g2D, int startX){
-    final boolean[][] g = val.graphics;
-    for (int x = 0; x < 3; x++){
-      for (int y = 0; y < 5; y++){
-        if (g[y][x]){
-          g2D.fillRect(startX + x * PIXEL_SIZE, BOARD_HEIGHT + PIXEL_SIZE + y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
-        }
-      }
-    }
-  }
-
-  private void updateHead(){
+  /** Updates position of the snake's head based on current direction. */
+  private void updateHead() {
     final Point head = snake.getHead();
     direction = nextDirection;
     switch (direction) {
@@ -140,20 +94,39 @@ public class Board extends JPanel implements ActionListener {
       case RIGHT -> head.x = (head.x + 1) % PIXEL_WIDTH;
     }
 
-    if (head.y == -1){
+    if (head.y == -1) {
       head.y += PIXEL_HEIGHT;
     }
-    if (head.x == -1){
+    if (head.x == -1) {
       head.x += PIXEL_WIDTH;
     }
   }
 
-  private void updateHighScore(){
+  /** Paints board or other output depending on current game state. */
+  @Override
+  public void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    if (gameOver) {
+      updateHighScore();
+      paintGameOver(g);
+    } else if (paused) {
+      paintPause(g);
+      timer.stop();
+    } else {
+      paintPixels(g);
+    }
+  }
+
+  /** If a high score already exists, reads the text file and updates the value stored if it has been surpassed.
+   *  Otherwise, creates a text file to store the current score. Stores high score in field to prevent lookups
+   *  where possible.
+   */
+  private void updateHighScore() {
     final int points = snake.growth();
     if (highScore < points) {
       final String root = "highscore.txt";
-      if (new File(root).exists()){
-        try{
+      if (new File(root).exists()) {
+        try {
           highScore = Integer.parseInt(Files.readAllLines(Path.of(root)).get(0));
           if (points > highScore) {
             highScore = points;
@@ -162,12 +135,12 @@ public class Board extends JPanel implements ActionListener {
             fileWriter.close();
           }
         }
-        catch (Exception ignored){
+        catch (Exception ignored) {
           highScore = -1;
         }
       } else {
         highScore = points;
-        try{
+        try {
           final FileWriter fileWriter = new FileWriter(root);
           fileWriter.write(Integer.toString(points));
           fileWriter.close();
@@ -179,23 +152,99 @@ public class Board extends JPanel implements ActionListener {
     }
   }
 
-  private void displayGameOver(Graphics g){
+  /** Paints game over screen. */
+  private void paintGameOver(Graphics g) {
+    final Font captionFont = new Font("Courier New", Font.BOLD, 24);
     final String highScoreOutput = "HIGH SCORE: " + highScore;
-    final String titleOutput = "GAME OVER";
-    final String captionOutput = "-PRESS R TO RESTART-";
-    final Font titleFont = new Font("Arial", Font.BOLD, 64);
-    final Font captionFont = new Font("Courier New", Font.BOLD, 20);
 
-    g.setFont(titleFont);
     g.setColor(Color.red);
-    g.drawString(titleOutput, (BOARD_WIDTH - getFontMetrics(titleFont).stringWidth(titleOutput)) / 2, COMPONENT_HEIGHT / 2);
-    
-    g.setColor(Color.white);
-    g.setFont(captionFont);
-    g.drawString(captionOutput, (BOARD_WIDTH - getFontMetrics(captionFont).stringWidth(captionOutput)) / 2, COMPONENT_HEIGHT * 5 / 8);
+    paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
     g.drawString(highScoreOutput, (BOARD_WIDTH - getFontMetrics(captionFont).stringWidth(highScoreOutput)) / 2, COMPONENT_HEIGHT / 8);
   }
 
+  /** Paints pause screen. */
+  private void paintPause(Graphics g) {
+    final Graphics2D g2D = (Graphics2D) g;
+
+    g2D.setPaint(Color.lightGray);
+    g2D.fillRect(0, BOARD_HEIGHT, BOARD_WIDTH, 7 * PIXEL_SIZE);
+
+    g2D.setPaint(Color.black);
+    translatePoints(g2D);
+
+    g2D.setPaint(Color.gray);
+    g2D.fillRect(lemon.x * PIXEL_SIZE, lemon.y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
+
+    g2D.setPaint(Color.darkGray);
+    for (Point point : snake.getBody()) {
+      g2D.fillRect(point.x * PIXEL_SIZE, point.y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
+    }
+
+    g.setColor(Color.yellow);
+    paintTitles(g, "PAUSED", "-PRESS P TO CONTINUE-");
+  }
+
+  /** Prints title and caption elements of displays. */
+  private void paintTitles(Graphics g, String titleOutput, String captionOutput) {
+    final Font titleFont = new Font("Arial", Font.BOLD, 64);
+    final Font captionFont = new Font("Courier New", Font.BOLD, 24);
+
+    g.setFont(titleFont);
+    g.drawString(titleOutput, (BOARD_WIDTH - getFontMetrics(titleFont).stringWidth(titleOutput)) / 2, COMPONENT_HEIGHT / 2);
+
+    g.setColor(Color.white);
+    g.setFont(captionFont);
+    g.drawString(captionOutput, (BOARD_WIDTH - getFontMetrics(captionFont).stringWidth(captionOutput)) / 2, COMPONENT_HEIGHT * 5 / 8);
+  }
+
+  /** Paints pixels on the board including snake, lemon and points. */
+  private void paintPixels(Graphics g) {
+    final Graphics2D g2D = (Graphics2D) g;
+
+    g2D.setPaint(Color.white);
+    g2D.fillRect(0, BOARD_HEIGHT, BOARD_WIDTH, 7 * PIXEL_SIZE);
+
+    g2D.setPaint(Color.black);
+    translatePoints(g2D);
+
+    g2D.setPaint(Color.yellow);
+    g2D.fillRect(lemon.x * PIXEL_SIZE, lemon.y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
+
+    g2D.setPaint(Color.green);
+    for (Point point : snake.getBody()) {
+      g2D.fillRect(point.x * PIXEL_SIZE, point.y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
+    }
+  }
+
+  /** Determines how the current number of points will be painted. */
+  private void translatePoints(Graphics2D g2D) {
+    final int points = snake.growth();
+    final int pointsRemainder = points % 10;
+    if (points > 99) {
+      paintDigit(PixelPoints.values()[points / 100], g2D, (int) (BOARD_WIDTH / 2 - 5.5 * PIXEL_SIZE));
+      paintDigit(PixelPoints.values()[(points / 10) % 10], g2D, (int) (BOARD_WIDTH / 2 - PIXEL_SIZE * 1.5));
+      paintDigit(PixelPoints.values()[pointsRemainder], g2D, (int) (BOARD_WIDTH / 2 + 2.5 * PIXEL_SIZE));
+    } else if (points > 9) {
+      paintDigit(PixelPoints.values()[points / 10], g2D, (int) (BOARD_WIDTH / 2 - 3.5 * PIXEL_SIZE));
+      paintDigit(PixelPoints.values()[pointsRemainder], g2D, (int) (BOARD_WIDTH / 2 + 0.5 * PIXEL_SIZE));
+    } else {
+      paintDigit(PixelPoints.values()[pointsRemainder], g2D, (int) (BOARD_WIDTH / 2 - PIXEL_SIZE * 1.5));
+    }
+  }
+
+  /** Takes graphical representation of a digit to paint as pixels. */
+  private void paintDigit(PixelPoints val, Graphics2D g2D, int startX) {
+    final boolean[][] g = val.graphics;
+    for (int x = 0; x < 3; x++) {
+      for (int y = 0; y < 5; y++) {
+        if (g[y][x]) {
+          g2D.fillRect(startX + x * PIXEL_SIZE, BOARD_HEIGHT + PIXEL_SIZE + y * PIXEL_SIZE, BORDERED_PIXEL_SIZE, BORDERED_PIXEL_SIZE);
+        }
+      }
+    }
+  }
+
+  /** An enum to represent the different directions the snake can move. */
   private enum Orientation {
     DOWN,
     UP,
@@ -203,6 +252,7 @@ public class Board extends JPanel implements ActionListener {
     RIGHT
   }
 
+  /** An enum to represent the digits 0-9 graphically with a 2D-Array of boolean values. */
   private enum PixelPoints {
     ZERO (new boolean[][]{{true, true, true}, {true, false, true}, {true, false, true}, {true, false, true}, {true, true, true}}),
     ONE (new boolean[][]{{false, true, false}, {false, true, false}, {false, true, false}, {false, true, false}, {false, true, false}}),
@@ -220,10 +270,11 @@ public class Board extends JPanel implements ActionListener {
     PixelPoints(boolean[][] graphics) {this.graphics = graphics;}
     }
 
+  /** Class to determine appropriate response to key presses. */
   private class DirectionAdapter extends KeyAdapter {
     @Override
     public void keyPressed(KeyEvent e) {
-      switch (e.getKeyCode()){
+      switch (e.getKeyCode()) {
         case (KeyEvent.VK_DOWN):
         case (KeyEvent.VK_S):
           if (direction != Orientation.UP) {
@@ -246,6 +297,14 @@ public class Board extends JPanel implements ActionListener {
         case (KeyEvent.VK_D):
           if (direction != Orientation.LEFT) {
             nextDirection = Orientation.RIGHT;
+          }
+          break;
+        case (KeyEvent.VK_P):
+          if (paused) {
+            timer.start();
+            paused = false;
+          } else {
+            paused = true;
           }
           break;
         case (KeyEvent.VK_R):

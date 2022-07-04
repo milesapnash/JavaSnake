@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+/** A window to hold the game board inside. */
 public class Window extends JFrame {
   public Window() {
     setTitle("JavaSnake");
