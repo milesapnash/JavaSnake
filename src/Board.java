@@ -40,7 +40,7 @@ public class Board extends JPanel implements ActionListener {
     initBoard();
   }
 
-  /** Resets fields of the board for a new game. */
+  /** Resets fields of the Board for a new game. */
   private void initBoard() {
     snake = new Snake(PIXEL_WIDTH, PIXEL_HEIGHT);
     direction = Orientation.UP;
@@ -152,16 +152,6 @@ public class Board extends JPanel implements ActionListener {
     }
   }
 
-  /** Paints game over screen. */
-  private void paintGameOver(Graphics g) {
-    final Font captionFont = new Font("Courier New", Font.BOLD, 24);
-    final String highScoreOutput = "HIGH SCORE: " + highScore;
-
-    g.setColor(Color.red);
-    paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
-    g.drawString(highScoreOutput, (BOARD_WIDTH - getFontMetrics(captionFont).stringWidth(highScoreOutput)) / 2, COMPONENT_HEIGHT / 8);
-  }
-
   /** Paints pause screen. */
   private void paintPause(Graphics g) {
     final Graphics2D g2D = (Graphics2D) g;
@@ -182,6 +172,19 @@ public class Board extends JPanel implements ActionListener {
 
     g.setColor(Color.yellow);
     paintTitles(g, "PAUSED", "-PRESS P TO CONTINUE-");
+  }
+
+  /** Paints Game Over screen. */
+  private void paintGameOver(Graphics g) {
+    final Font captionFont = new Font("Courier New", Font.BOLD, 24);
+    final String scoreOutput = "SCORE: " + snake.growth();
+    final String highScoreOutput = "HIGH SCORE: " + highScore;
+
+    g.setColor(Color.red);
+    paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
+    g.drawString(highScoreOutput, (BOARD_WIDTH - getFontMetrics(captionFont).stringWidth(highScoreOutput)) / 2, COMPONENT_HEIGHT / 4);
+    g.setColor(Color.yellow);
+    g.drawString(scoreOutput, (BOARD_WIDTH - getFontMetrics(captionFont).stringWidth(scoreOutput)) / 2,  COMPONENT_HEIGHT / 8);
   }
 
   /** Prints title and caption elements of displays. */
@@ -275,45 +278,40 @@ public class Board extends JPanel implements ActionListener {
     @Override
     public void keyPressed(KeyEvent e) {
       switch (e.getKeyCode()) {
-        case (KeyEvent.VK_DOWN):
-        case (KeyEvent.VK_S):
+        case (KeyEvent.VK_DOWN), (KeyEvent.VK_S) -> {
           if (direction != Orientation.UP) {
             nextDirection = Orientation.DOWN;
           }
-          break;
-        case (KeyEvent.VK_UP):
-        case (KeyEvent.VK_W):
+        }
+        case (KeyEvent.VK_UP), (KeyEvent.VK_W) -> {
           if (direction != Orientation.DOWN) {
             nextDirection = Orientation.UP;
           }
-          break;
-        case (KeyEvent.VK_LEFT):
-        case (KeyEvent.VK_A):
+        }
+        case (KeyEvent.VK_LEFT), (KeyEvent.VK_A) -> {
           if (direction != Orientation.RIGHT) {
             nextDirection = Orientation.LEFT;
           }
-          break;
-        case (KeyEvent.VK_RIGHT):
-        case (KeyEvent.VK_D):
+        }
+        case (KeyEvent.VK_RIGHT), (KeyEvent.VK_D) -> {
           if (direction != Orientation.LEFT) {
             nextDirection = Orientation.RIGHT;
           }
-          break;
-        case (KeyEvent.VK_P):
+        }
+        case (KeyEvent.VK_P) -> {
           if (paused) {
             timer.start();
             paused = false;
           } else {
             paused = true;
           }
-          break;
-        case (KeyEvent.VK_R):
+        }
+        case (KeyEvent.VK_R) -> {
           if (gameOver) {
             initBoard();
           }
-          break;
-        case (KeyEvent.VK_ESCAPE):
-          System.exit(0);
+        }
+        case (KeyEvent.VK_ESCAPE) -> System.exit(0);
       }
     }
   }

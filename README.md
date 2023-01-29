@@ -1,5 +1,5 @@
 # JavaSnake
-A simple game of Snake, implemented in Java using the javax.swing library
+A simple game of Snake, implemented in Java using the Java Swing library
 
 ## GAMEPLAY
 (WASD or Arrow Keys to move)
