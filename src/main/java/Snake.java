@@ -17,6 +17,22 @@ public class Snake {
     body.add(new Point(x, y + 2));
   }
 
+  /**
+   * Creates a length-3 vertical snake: {@code (headX, headY)}, {@code (headX, headY + 1)}, {@code (headX, headY + 2)}.
+   * Intended for tests and deterministic setups.
+   */
+  public static Snake createFixed(int headX, int headY) {
+    Point head = new Point(headX, headY);
+    return new Snake(head, new Point(headX, headY + 1), new Point(headX, headY + 2));
+  }
+
+  private Snake(Point head, Point seg2, Point seg3) {
+    this.head = head;
+    body.add(head);
+    body.add(seg2);
+    body.add(seg3);
+  }
+
   public Point getHead() {
     return head;
   }
