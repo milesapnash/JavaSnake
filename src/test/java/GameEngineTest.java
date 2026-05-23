@@ -115,6 +115,31 @@ class GameEngineTest {
   }
 
   @Test
+  void tickAllowsMovingToVacatedTailPosition() {
+    GameEngine engine = new GameEngine(new Random(42L));
+    GameState state = runningState(Snake.createFixed(5, 5));
+
+    // Grow snake to length 4 by eating food
+    state.setFood(new Point(5, 4));
+    engine.tick(state);
+    assertEquals(4, state.getSnake().getBody().size());
+
+    // Navigate a tight U-turn where head lands on the vacated tail position
+    state.setFood(new Point(0, 0));
+    engine.requestDirection(state, Direction.RIGHT);
+    engine.tick(state); // (6,4), (5,4), (5,5), (5,6)
+
+    engine.requestDirection(state, Direction.DOWN);
+    engine.tick(state); // (6,5), (6,4), (5,4), (5,5)
+
+    engine.requestDirection(state, Direction.LEFT);
+    engine.tick(state); // head → (5,5), old tail was at (5,5)
+
+    assertEquals(GameMode.RUNNING, state.getMode());
+    assertEquals(new Point(5, 5), state.getSnake().getHead());
+  }
+
+  @Test
   void resetStartsRunningAndPlacesFoodOffSnake() {
     GameEngine engine = new GameEngine(new Random(99L));
     GameState state = new GameState();

@@ -25,6 +25,7 @@ public class BoardRenderer {
 
     g.setColor(Color.red);
     paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
+    g.setColor(Color.red);
     g.drawString(highScoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(highScoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
     g.setColor(Color.yellow);
     g.drawString(scoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(scoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);

@@ -67,12 +67,12 @@ public class Snake {
   }
 
   public void move(Direction direction, int boardWidth, int boardHeight, boolean growing) {
-    Point head = nextHead(direction, boardWidth, boardHeight);
-    body.addFirst(head);
-    occupied.add(head);
     if (!growing) {
       occupied.remove(body.removeLast());
     }
+    Point head = nextHead(direction, boardWidth, boardHeight);
+    body.addFirst(head);
+    occupied.add(head);
   }
 
   public int growth() {
