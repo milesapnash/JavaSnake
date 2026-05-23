@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class GameEngine {
   private final Random random;
+  private Direction nextDirection = Direction.UP;
 
   public GameEngine() {
     this(new Random());
@@ -13,17 +14,21 @@ public class GameEngine {
     this.random = Objects.requireNonNull(random, "random");
   }
 
+  public Direction getNextDirection() {
+    return nextDirection;
+  }
+
   public void reset(GameState state) {
     state.setSnake(new Snake(random, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT));
     state.setDirection(Direction.UP);
-    state.setNextDirection(Direction.UP);
+    nextDirection = Direction.UP;
     state.setMode(GameMode.RUNNING);
     spawnFood(state);
   }
 
   public void requestDirection(GameState state, Direction requested) {
     if (!state.getDirection().isOpposite(requested)) {
-      state.setNextDirection(requested);
+      nextDirection = requested;
     }
   }
 
@@ -41,12 +46,11 @@ public class GameEngine {
     }
 
     final Snake snake = state.getSnake();
-    final Direction direction = state.getNextDirection();
-    final boolean growing = snake.nextHead(direction, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT)
+    final boolean growing = snake.nextHead(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT)
         .equals(state.getLemon());
 
-    state.setDirection(direction);
-    snake.move(direction, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT, growing);
+    state.setDirection(nextDirection);
+    snake.move(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT, growing);
 
     if (snake.eatingSelf()) {
       state.setMode(GameMode.GAME_OVER);

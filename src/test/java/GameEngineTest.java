@@ -12,7 +12,6 @@ class GameEngineTest {
     GameState state = new GameState();
     state.setSnake(snake);
     state.setDirection(Direction.UP);
-    state.setNextDirection(Direction.UP);
     state.setMode(GameMode.RUNNING);
     return state;
   }
@@ -22,11 +21,10 @@ class GameEngineTest {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(5, 5));
     state.setDirection(Direction.UP);
-    state.setNextDirection(Direction.UP);
 
     engine.requestDirection(state, Direction.DOWN);
 
-    assertEquals(Direction.UP, state.getNextDirection());
+    assertEquals(Direction.UP, engine.getNextDirection());
   }
 
   @Test
@@ -34,11 +32,10 @@ class GameEngineTest {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(5, 5));
     state.setDirection(Direction.UP);
-    state.setNextDirection(Direction.UP);
 
     engine.requestDirection(state, Direction.LEFT);
 
-    assertEquals(Direction.LEFT, state.getNextDirection());
+    assertEquals(Direction.LEFT, engine.getNextDirection());
   }
 
   @Test
@@ -109,7 +106,7 @@ class GameEngineTest {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(5, 5));
     state.setDirection(Direction.DOWN);
-    state.setNextDirection(Direction.DOWN);
+    engine.requestDirection(state, Direction.DOWN);
     state.getLemon().setLocation(0, 0);
 
     engine.tick(state);
@@ -126,7 +123,7 @@ class GameEngineTest {
 
     assertEquals(GameMode.RUNNING, state.getMode());
     assertEquals(Direction.UP, state.getDirection());
-    assertEquals(Direction.UP, state.getNextDirection());
+    assertEquals(Direction.UP, engine.getNextDirection());
     assertEquals(3, state.getSnake().getBody().size());
     assertFalse(state.getSnake().containsPoint(state.getLemon()));
   }

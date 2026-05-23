@@ -4,7 +4,6 @@ public class GameState {
   private Snake snake;
   private final Point lemon = new Point();
   private Direction direction = Direction.UP;
-  private Direction nextDirection = Direction.UP;
   private GameMode mode = GameMode.RUNNING;
   private int highScore = -1;
 
@@ -26,14 +25,6 @@ public class GameState {
 
   public void setDirection(Direction direction) {
     this.direction = direction;
-  }
-
-  public Direction getNextDirection() {
-    return nextDirection;
-  }
-
-  public void setNextDirection(Direction nextDirection) {
-    this.nextDirection = nextDirection;
   }
 
   public GameMode getMode() {
