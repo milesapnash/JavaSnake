@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 import java.awt.*;
 
 public class BoardRenderer {
@@ -7,6 +9,7 @@ public class BoardRenderer {
   public void paint(Graphics g, GameState state) {
     switch (state.getMode()) {
       case GAME_OVER -> paintGameOver(g, state);
+      case WON -> paintWon(g, state);
       case PAUSED -> paintPause(g, state);
       case RUNNING -> paintGameContent(g, state, Color.white, Color.yellow, Color.green);
     }
@@ -19,13 +22,23 @@ public class BoardRenderer {
     paintTitles(g, "PAUSED", "-PRESS P TO CONTINUE-");
   }
 
+  private void paintWon(Graphics g, GameState state) {
+    String scoreText = "SCORE: " + state.getSnake().growth();
+    String highScoreText = "HIGH SCORE: " + state.getHighScore();
+
+    g.setColor(Color.green);
+    paintTitles(g, "YOU WIN!", "-PRESS R TO RESTART-");
+    g.drawString(highScoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(highScoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
+    g.setColor(Color.yellow);
+    g.drawString(scoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(scoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
+  }
+
   private void paintGameOver(Graphics g, GameState state) {
     String scoreText = "SCORE: " + state.getSnake().growth();
     String highScoreText = "HIGH SCORE: " + state.getHighScore();
 
     g.setColor(Color.red);
     paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
-    g.setColor(Color.red);
     g.drawString(highScoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(highScoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
     g.setColor(Color.yellow);
     g.drawString(scoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(scoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
@@ -65,7 +78,7 @@ public class BoardRenderer {
     int totalWidth = digits.length() * digitWidth - BoardConfig.PIXEL_SIZE;
     int startX = (BoardConfig.BOARD_WIDTH - totalWidth) / 2;
     for (int i = 0; i < digits.length(); i++) {
-      paintDigit(PixelDigit.values()[digits.charAt(i) - '0'], g2D, startX + i * digitWidth);
+      paintDigit(PIXEL_DIGITS[digits.charAt(i) - '0'], g2D, startX + i * digitWidth);
     }
   }
 
@@ -84,6 +97,8 @@ public class BoardRenderer {
       }
     }
   }
+
+  private static final PixelDigit[] PIXEL_DIGITS = PixelDigit.values();
 
   private enum PixelDigit {
     ZERO(new boolean[][]{{true, true, true}, {true, false, true}, {true, false, true}, {true, false, true}, {true, true, true}}),

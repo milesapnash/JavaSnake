@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +22,8 @@ public class FileHighScoreStore implements HighScoreStore {
         return -1;
       }
       return Integer.parseInt(value);
-    } catch (IOException | NumberFormatException ignored) {
+    } catch (IOException | NumberFormatException e) {
+      System.err.println("Failed to load high score: " + e.getMessage());
       return -1;
     }
   }
@@ -32,7 +35,8 @@ public class FileHighScoreStore implements HighScoreStore {
     if (next != current) {
       try {
         Files.writeString(scorePath, Integer.toString(next));
-      } catch (IOException ignored) {
+      } catch (IOException e) {
+        System.err.println("Failed to save high score: " + e.getMessage());
         return current;
       }
     }

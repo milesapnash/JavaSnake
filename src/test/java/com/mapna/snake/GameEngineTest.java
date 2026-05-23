@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 import org.junit.jupiter.api.Test;
 
 import java.awt.Point;

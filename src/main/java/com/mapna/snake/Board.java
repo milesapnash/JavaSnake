@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,10 +34,10 @@ public class Board extends JPanel implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     engine.tick(state);
-    if (state.getMode() == GameMode.PAUSED || state.getMode() == GameMode.GAME_OVER) {
+    if (state.getMode() == GameMode.PAUSED || state.getMode() == GameMode.GAME_OVER || state.getMode() == GameMode.WON) {
       timer.stop();
     }
-    if (state.getMode() == GameMode.GAME_OVER && !highScoreSaved) {
+    if ((state.getMode() == GameMode.GAME_OVER || state.getMode() == GameMode.WON) && !highScoreSaved) {
       state.setHighScore(highScoreStore.saveIfHigher(state.getSnake().growth()));
       highScoreSaved = true;
     }
@@ -63,11 +65,11 @@ public class Board extends JPanel implements ActionListener {
           }
         }
         case KeyEvent.VK_R -> {
-          if (state.getMode() == GameMode.GAME_OVER) {
+          if (state.getMode() == GameMode.GAME_OVER || state.getMode() == GameMode.WON) {
             initBoard();
           }
         }
-        case KeyEvent.VK_ESCAPE -> System.exit(0);
+        case KeyEvent.VK_ESCAPE -> SwingUtilities.getWindowAncestor(Board.this).dispose();
       }
     }
   }

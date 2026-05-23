@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashSet;
@@ -66,13 +68,12 @@ public class Snake {
     };
   }
 
-  public void move(Direction direction, int boardWidth, int boardHeight, boolean growing) {
+  public void move(Point newHead, boolean growing) {
     if (!growing) {
       occupied.remove(body.removeLast());
     }
-    Point head = nextHead(direction, boardWidth, boardHeight);
-    body.addFirst(head);
-    occupied.add(head);
+    body.addFirst(newHead);
+    occupied.add(newHead);
   }
 
   public int growth() {

@@ -43,7 +43,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.3.0</version>
         <configuration>
-          <mainClass>Game</mainClass>
+          <mainClass>com.mapna.snake.Game</mainClass>
         </configuration>
       </plugin>
     </plugins>

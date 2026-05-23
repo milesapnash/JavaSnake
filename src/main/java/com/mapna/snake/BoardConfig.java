@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 public final class BoardConfig {
   public static final int TICK_RATE_MS = 80;
   public static final int BOARD_WIDTH = 480;

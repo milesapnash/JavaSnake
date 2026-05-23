@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 import javax.swing.*;
 
 public class Game {

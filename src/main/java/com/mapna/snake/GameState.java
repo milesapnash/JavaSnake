@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 import java.awt.*;
 
 public class GameState {

@@ -1,4 +1,8 @@
+package com.mapna.snake;
+
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -46,11 +50,11 @@ public class GameEngine {
     }
 
     Snake snake = state.getSnake();
-    boolean growing = snake.nextHead(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT)
-        .equals(state.getFood());
+    Point head = snake.nextHead(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT);
+    boolean growing = head.equals(state.getFood());
 
     state.setDirection(nextDirection);
-    snake.move(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT, growing);
+    snake.move(head, growing);
 
     if (snake.eatingSelf()) {
       state.setMode(GameMode.GAME_OVER);
@@ -58,21 +62,25 @@ public class GameEngine {
     }
 
     if (growing) {
-      spawnFood(state);
+      if (snake.getBody().size() >= BoardConfig.PIXEL_WIDTH * BoardConfig.PIXEL_HEIGHT) {
+        state.setMode(GameMode.WON);
+      } else {
+        spawnFood(state);
+      }
     }
   }
 
   private void spawnFood(GameState state) {
     Snake snake = state.getSnake();
-    while (true) {
-      Point candidate = new Point(
-          random.nextInt(BoardConfig.PIXEL_WIDTH),
-          random.nextInt(BoardConfig.PIXEL_HEIGHT)
-      );
-      if (!snake.containsPoint(candidate)) {
-        state.setFood(candidate);
-        return;
+    List<Point> free = new ArrayList<>();
+    for (int x = 0; x < BoardConfig.PIXEL_WIDTH; x++) {
+      for (int y = 0; y < BoardConfig.PIXEL_HEIGHT; y++) {
+        Point p = new Point(x, y);
+        if (!snake.containsPoint(p)) {
+          free.add(p);
+        }
       }
     }
+    state.setFood(free.get(random.nextInt(free.size())));
   }
 }

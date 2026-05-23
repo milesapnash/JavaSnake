@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 public enum Direction {
   DOWN,
   UP,
