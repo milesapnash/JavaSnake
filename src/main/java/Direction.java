@@ -4,10 +4,16 @@ public enum Direction {
   LEFT,
   RIGHT;
 
+  public Direction opposite() {
+    return switch (this) {
+      case DOWN -> UP;
+      case UP -> DOWN;
+      case LEFT -> RIGHT;
+      case RIGHT -> LEFT;
+    };
+  }
+
   public boolean isOpposite(Direction other) {
-    return (this == DOWN && other == UP)
-        || (this == UP && other == DOWN)
-        || (this == LEFT && other == RIGHT)
-        || (this == RIGHT && other == LEFT);
+    return this.opposite() == other;
   }
 }
