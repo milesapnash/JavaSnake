@@ -67,16 +67,12 @@ public class BoardRenderer {
   }
 
   private void translatePoints(Graphics2D g2D, int points) {
-    final int pointsRemainder = points % 10;
-    if (points > 99) {
-      paintDigit(PixelDigit.values()[points / 100], g2D, (int) (BoardConfig.BOARD_WIDTH / 2 - 5.5 * BoardConfig.PIXEL_SIZE));
-      paintDigit(PixelDigit.values()[(points / 10) % 10], g2D, (int) (BoardConfig.BOARD_WIDTH / 2 - BoardConfig.PIXEL_SIZE * 1.5));
-      paintDigit(PixelDigit.values()[pointsRemainder], g2D, (int) (BoardConfig.BOARD_WIDTH / 2 + 2.5 * BoardConfig.PIXEL_SIZE));
-    } else if (points > 9) {
-      paintDigit(PixelDigit.values()[points / 10], g2D, (int) (BoardConfig.BOARD_WIDTH / 2 - 3.5 * BoardConfig.PIXEL_SIZE));
-      paintDigit(PixelDigit.values()[pointsRemainder], g2D, (int) (BoardConfig.BOARD_WIDTH / 2 + 0.5 * BoardConfig.PIXEL_SIZE));
-    } else {
-      paintDigit(PixelDigit.values()[pointsRemainder], g2D, (int) (BoardConfig.BOARD_WIDTH / 2 - BoardConfig.PIXEL_SIZE * 1.5));
+    String digits = Integer.toString(points);
+    int digitWidth = 4 * BoardConfig.PIXEL_SIZE;
+    int totalWidth = digits.length() * digitWidth - BoardConfig.PIXEL_SIZE;
+    int startX = (BoardConfig.BOARD_WIDTH - totalWidth) / 2;
+    for (int i = 0; i < digits.length(); i++) {
+      paintDigit(PixelDigit.values()[digits.charAt(i) - '0'], g2D, startX + i * digitWidth);
     }
   }
 
