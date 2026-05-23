@@ -12,8 +12,8 @@ public class Snake {
   private final Set<Point> occupied = new HashSet<>();
 
   public Snake(Random random, int width, int height) {
-    final int x = random.nextInt(width);
-    final int y = random.nextInt(height - INITIAL_LENGTH);
+    int x = random.nextInt(width);
+    int y = random.nextInt(height - INITIAL_LENGTH);
 
     addSegment(new Point(x, y));
     addSegment(new Point(x, y + 1));

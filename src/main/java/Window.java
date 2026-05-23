@@ -17,13 +17,13 @@ public class Window extends JFrame {
   }
 
   private void setIcon() {
-    final Toolkit toolkit = Toolkit.getDefaultToolkit();
-    final URL iconUrl = getClass().getResource("/images/icon.png");
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+    URL iconUrl = getClass().getResource("/images/icon.png");
     if (iconUrl != null) {
       setIconImage(toolkit.getImage(iconUrl));
       return;
     }
-    final Path devIconPath = Path.of("src", "main", "resources", "images", "icon.png");
+    Path devIconPath = Path.of("src", "main", "resources", "images", "icon.png");
     setIconImage(toolkit.getImage(devIconPath.toAbsolutePath().toString()));
   }
 }

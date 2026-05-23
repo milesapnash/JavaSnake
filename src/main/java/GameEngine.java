@@ -45,8 +45,8 @@ public class GameEngine {
       return;
     }
 
-    final Snake snake = state.getSnake();
-    final boolean growing = snake.nextHead(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT)
+    Snake snake = state.getSnake();
+    boolean growing = snake.nextHead(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT)
         .equals(state.getLemon());
 
     state.setDirection(nextDirection);
@@ -63,9 +63,9 @@ public class GameEngine {
   }
 
   private void spawnFood(GameState state) {
-    final Snake snake = state.getSnake();
+    Snake snake = state.getSnake();
     while (true) {
-      final Point candidate = new Point(
+      Point candidate = new Point(
           random.nextInt(BoardConfig.PIXEL_WIDTH),
           random.nextInt(BoardConfig.PIXEL_HEIGHT)
       );

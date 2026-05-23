@@ -24,8 +24,8 @@ public class BoardRenderer {
   }
 
   private void paintGameOver(Graphics g, GameState state) {
-    final String scoreOutput = "SCORE: " + state.getSnake().growth();
-    final String highScoreOutput = "HIGH SCORE: " + state.getHighScore();
+    String scoreOutput = "SCORE: " + state.getSnake().growth();
+    String highScoreOutput = "HIGH SCORE: " + state.getHighScore();
 
     g.setColor(Color.red);
     paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
@@ -48,7 +48,7 @@ public class BoardRenderer {
   }
 
   private void paintGameContent(Graphics g, GameState state, Color hudColor, Color lemonColor, Color snakeColor) {
-    final Graphics2D g2D = (Graphics2D) g;
+    Graphics2D g2D = (Graphics2D) g;
 
     g2D.setPaint(hudColor);
     g2D.fillRect(0, BoardConfig.BOARD_HEIGHT, BoardConfig.BOARD_WIDTH, BoardConfig.HUD_ROWS * BoardConfig.PIXEL_SIZE);
@@ -77,7 +77,7 @@ public class BoardRenderer {
   }
 
   private void paintDigit(PixelDigit val, Graphics2D g2D, int startX) {
-    final boolean[][] graphic = val.graphics;
+    boolean[][] graphic = val.graphics;
     for (int x = 0; x < 3; x++) {
       for (int y = 0; y < 5; y++) {
         if (graphic[y][x]) {
