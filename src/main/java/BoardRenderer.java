@@ -14,22 +14,7 @@ public class BoardRenderer {
   }
 
   private void paintPause(Graphics g, GameState state) {
-    final Graphics2D g2D = (Graphics2D) g;
-
-    g2D.setPaint(Color.lightGray);
-    g2D.fillRect(0, BoardConfig.BOARD_HEIGHT, BoardConfig.BOARD_WIDTH, BoardConfig.HUD_ROWS * BoardConfig.PIXEL_SIZE);
-
-    g2D.setPaint(Color.black);
-    translatePoints(g2D, state.getSnake().growth());
-
-    g2D.setPaint(Color.gray);
-    Point lemon = state.getLemon();
-    g2D.fillRect(lemon.x * BoardConfig.PIXEL_SIZE, lemon.y * BoardConfig.PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
-
-    g2D.setPaint(Color.darkGray);
-    for (Point point : state.getSnake().getBody()) {
-      g2D.fillRect(point.x * BoardConfig.PIXEL_SIZE, point.y * BoardConfig.PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
-    }
+    paintGameContent(g, state, Color.lightGray, Color.gray, Color.darkGray);
 
     g.setColor(Color.yellow);
     paintTitles(g, "PAUSED", "-PRESS P TO CONTINUE-");
@@ -60,19 +45,23 @@ public class BoardRenderer {
   }
 
   private void paintPixels(Graphics g, GameState state) {
+    paintGameContent(g, state, Color.white, Color.yellow, Color.green);
+  }
+
+  private void paintGameContent(Graphics g, GameState state, Color hudColor, Color lemonColor, Color snakeColor) {
     final Graphics2D g2D = (Graphics2D) g;
 
-    g2D.setPaint(Color.white);
+    g2D.setPaint(hudColor);
     g2D.fillRect(0, BoardConfig.BOARD_HEIGHT, BoardConfig.BOARD_WIDTH, BoardConfig.HUD_ROWS * BoardConfig.PIXEL_SIZE);
 
     g2D.setPaint(Color.black);
     translatePoints(g2D, state.getSnake().growth());
 
     Point lemon = state.getLemon();
-    g2D.setPaint(Color.yellow);
+    g2D.setPaint(lemonColor);
     g2D.fillRect(lemon.x * BoardConfig.PIXEL_SIZE, lemon.y * BoardConfig.PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
 
-    g2D.setPaint(Color.green);
+    g2D.setPaint(snakeColor);
     for (Point point : state.getSnake().getBody()) {
       g2D.fillRect(point.x * BoardConfig.PIXEL_SIZE, point.y * BoardConfig.PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
     }
