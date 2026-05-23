@@ -10,7 +10,7 @@ public class Board extends JPanel implements ActionListener {
   private final GameEngine engine = new GameEngine();
   private final GameState state = new GameState();
   private final BoardRenderer renderer = new BoardRenderer();
-  private final HighScoreStore highScoreStore = new FileHighScoreStore("highscore.txt");
+  private final HighScoreStore highScoreStore = new FileHighScoreStore(BoardConfig.HIGHSCORE_FILE);
   private boolean highScoreSaved;
 
   /** A board to display the game and deal with user input. */
