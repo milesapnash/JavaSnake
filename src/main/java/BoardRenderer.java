@@ -1,6 +1,9 @@
 import java.awt.*;
 
 public class BoardRenderer {
+  private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 64);
+  private static final Font CAPTION_FONT = new Font("Courier New", Font.BOLD, 24);
+
   public void paint(Graphics g, GameState state) {
     if (state.getMode() == GameMode.GAME_OVER) {
       paintGameOver(g, state);
@@ -21,27 +24,23 @@ public class BoardRenderer {
   }
 
   private void paintGameOver(Graphics g, GameState state) {
-    final Font captionFont = new Font("Courier New", Font.BOLD, 24);
     final String scoreOutput = "SCORE: " + state.getSnake().growth();
     final String highScoreOutput = "HIGH SCORE: " + state.getHighScore();
 
     g.setColor(Color.red);
     paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
-    g.drawString(highScoreOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(captionFont).stringWidth(highScoreOutput)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
+    g.drawString(highScoreOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(highScoreOutput)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
     g.setColor(Color.yellow);
-    g.drawString(scoreOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(captionFont).stringWidth(scoreOutput)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
+    g.drawString(scoreOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(scoreOutput)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
   }
 
   private void paintTitles(Graphics g, String titleOutput, String captionOutput) {
-    final Font titleFont = new Font("Arial", Font.BOLD, 64);
-    final Font captionFont = new Font("Courier New", Font.BOLD, 24);
-
-    g.setFont(titleFont);
-    g.drawString(titleOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(titleFont).stringWidth(titleOutput)) / 2, BoardConfig.COMPONENT_HEIGHT / 2);
+    g.setFont(TITLE_FONT);
+    g.drawString(titleOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(TITLE_FONT).stringWidth(titleOutput)) / 2, BoardConfig.COMPONENT_HEIGHT / 2);
 
     g.setColor(Color.white);
-    g.setFont(captionFont);
-    g.drawString(captionOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(captionFont).stringWidth(captionOutput)) / 2, BoardConfig.COMPONENT_HEIGHT * 5 / 8);
+    g.setFont(CAPTION_FONT);
+    g.drawString(captionOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(captionOutput)) / 2, BoardConfig.COMPONENT_HEIGHT * 5 / 8);
   }
 
   private void paintPixels(Graphics g, GameState state) {
