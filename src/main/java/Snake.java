@@ -4,15 +4,14 @@ import java.util.Random;
 
 /** The snake, constructed in terms of the board size. */
 public class Snake {
-  private final Point head;
+  private static final int INITIAL_LENGTH = 3;
   private final LinkedList<Point> body = new LinkedList<>();
 
   public Snake(int width, int height) {
     final int x = new Random().nextInt(width);
-    final int y = new Random().nextInt(height - 3);
+    final int y = new Random().nextInt(height - INITIAL_LENGTH);
 
-    head = new Point(x, y);
-    body.add(head);
+    body.add(new Point(x, y));
     body.add(new Point(x, y + 1));
     body.add(new Point(x, y + 2));
   }
@@ -22,19 +21,17 @@ public class Snake {
    * Intended for tests and deterministic setups.
    */
   public static Snake createFixed(int headX, int headY) {
-    Point head = new Point(headX, headY);
-    return new Snake(head, new Point(headX, headY + 1), new Point(headX, headY + 2));
+    return new Snake(new Point(headX, headY), new Point(headX, headY + 1), new Point(headX, headY + 2));
   }
 
   private Snake(Point head, Point seg2, Point seg3) {
-    this.head = head;
     body.add(head);
     body.add(seg2);
     body.add(seg3);
   }
 
   public Point getHead() {
-    return head;
+    return body.getFirst();
   }
 
   public LinkedList<Point> getBody() {
@@ -48,7 +45,7 @@ public class Snake {
   /** Determines if the snake's head is touching any other part of the body. */
   public boolean eatingSelf() {
     for (int i = 1; i < body.size(); i++) {
-      if (head.equals(body.get(i))) {
+      if (body.getFirst().equals(body.get(i))) {
         return true;
       }
     }
@@ -71,6 +68,6 @@ public class Snake {
 
   /** Returns the difference in size of the body from the original length. */
   public int growth() {
-    return body.size() - 3;
+    return body.size() - INITIAL_LENGTH;
   }
 }
