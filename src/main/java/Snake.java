@@ -1,20 +1,23 @@
 import java.awt.*;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /** The snake, constructed in terms of the board size. */
 public class Snake {
   private static final int INITIAL_LENGTH = 3;
   private final LinkedList<Point> body = new LinkedList<>();
+  private final Set<Point> occupied = new HashSet<>();
 
   public Snake(Random random, int width, int height) {
     final int x = random.nextInt(width);
     final int y = random.nextInt(height - INITIAL_LENGTH);
 
-    body.add(new Point(x, y));
-    body.add(new Point(x, y + 1));
-    body.add(new Point(x, y + 2));
+    addSegment(new Point(x, y));
+    addSegment(new Point(x, y + 1));
+    addSegment(new Point(x, y + 2));
   }
 
   /**
@@ -26,9 +29,14 @@ public class Snake {
   }
 
   private Snake(Point head, Point seg2, Point seg3) {
-    body.add(head);
-    body.add(seg2);
-    body.add(seg3);
+    addSegment(head);
+    addSegment(seg2);
+    addSegment(seg3);
+  }
+
+  private void addSegment(Point p) {
+    body.add(p);
+    occupied.add(p);
   }
 
   public Point getHead() {
@@ -40,17 +48,14 @@ public class Snake {
   }
 
   public boolean containsPoint(Point point) {
-    return body.contains(point);
+    return occupied.contains(point);
   }
 
   /** Determines if the snake's head is touching any other part of the body. */
   public boolean eatingSelf() {
-    for (int i = 1; i < body.size(); i++) {
-      if (body.getFirst().equals(body.get(i))) {
-        return true;
-      }
-    }
-    return false;
+    // Head occupies a duplicate position in the set only if it overlaps another segment.
+    // Since the set deduplicates, a collision means the set is smaller than the list.
+    return occupied.size() < body.size();
   }
 
   /** Returns where the head would be after one step, without mutating state. */
@@ -66,9 +71,11 @@ public class Snake {
 
   /** Moves the snake one step in the given direction, wrapping around the board. Grows if specified. */
   public void move(Direction direction, int boardWidth, int boardHeight, boolean growing) {
-    body.addFirst(nextHead(direction, boardWidth, boardHeight));
+    Point head = nextHead(direction, boardWidth, boardHeight);
+    body.addFirst(head);
+    occupied.add(head);
     if (!growing) {
-      body.removeLast();
+      occupied.remove(body.removeLast());
     }
   }
 
