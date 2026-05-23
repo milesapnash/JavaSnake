@@ -2,16 +2,15 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 /** The snake, constructed in terms of the board size. */
 public class Snake {
   private static final int INITIAL_LENGTH = 3;
   private final LinkedList<Point> body = new LinkedList<>();
 
-  public Snake(int width, int height) {
-    final int x = new Random().nextInt(width);
-    final int y = new Random().nextInt(height - INITIAL_LENGTH);
+  public Snake(Random random, int width, int height) {
+    final int x = random.nextInt(width);
+    final int y = random.nextInt(height - INITIAL_LENGTH);
 
     body.add(new Point(x, y));
     body.add(new Point(x, y + 1));

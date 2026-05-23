@@ -14,7 +14,7 @@ public class GameEngine {
   }
 
   public void reset(GameState state) {
-    state.setSnake(new Snake(BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT));
+    state.setSnake(new Snake(random, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT));
     state.setDirection(Direction.UP);
     state.setNextDirection(Direction.UP);
     state.setMode(GameMode.RUNNING);
