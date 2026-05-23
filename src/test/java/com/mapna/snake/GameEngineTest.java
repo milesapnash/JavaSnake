@@ -1,3 +1,5 @@
+package com.mapna.snake;
+
 import org.junit.jupiter.api.Test;
 
 import java.awt.Point;
@@ -12,7 +14,6 @@ class GameEngineTest {
     GameState state = new GameState();
     state.setSnake(snake);
     state.setDirection(Direction.UP);
-    state.setNextDirection(Direction.UP);
     state.setMode(GameMode.RUNNING);
     return state;
   }
@@ -22,11 +23,10 @@ class GameEngineTest {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(5, 5));
     state.setDirection(Direction.UP);
-    state.setNextDirection(Direction.UP);
 
     engine.requestDirection(state, Direction.DOWN);
 
-    assertEquals(Direction.UP, state.getNextDirection());
+    assertEquals(Direction.UP, engine.getNextDirection());
   }
 
   @Test
@@ -34,11 +34,10 @@ class GameEngineTest {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(5, 5));
     state.setDirection(Direction.UP);
-    state.setNextDirection(Direction.UP);
 
     engine.requestDirection(state, Direction.LEFT);
 
-    assertEquals(Direction.LEFT, state.getNextDirection());
+    assertEquals(Direction.LEFT, engine.getNextDirection());
   }
 
   @Test
@@ -71,7 +70,7 @@ class GameEngineTest {
   void tickMovesHeadAccordingToNextDirection() {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(10, 10));
-    state.getLemon().setLocation(0, 0);
+    state.setFood(new Point(0, 0));
 
     engine.tick(state);
 
@@ -83,7 +82,7 @@ class GameEngineTest {
   void tickWrapsVerticallyAtTopEdge() {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(10, 0));
-    state.getLemon().setLocation(0, 0);
+    state.setFood(new Point(0, 0));
 
     engine.tick(state);
 
@@ -94,14 +93,14 @@ class GameEngineTest {
   void tickEatingFoodGrowsSnakeAndRespawnsFood() {
     GameEngine engine = new GameEngine(new Random(42L));
     GameState state = runningState(Snake.createFixed(10, 10));
-    state.getLemon().setLocation(10, 9);
+    state.setFood(new Point(10, 9));
 
     engine.tick(state);
 
     assertEquals(new Point(10, 9), state.getSnake().getHead());
     assertEquals(4, state.getSnake().getBody().size());
     assertEquals(1, state.getSnake().growth());
-    assertFalse(state.getSnake().containsPoint(state.getLemon()));
+    assertFalse(state.getSnake().containsPoint(state.getFood()));
   }
 
   @Test
@@ -109,12 +108,37 @@ class GameEngineTest {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(5, 5));
     state.setDirection(Direction.DOWN);
-    state.setNextDirection(Direction.DOWN);
-    state.getLemon().setLocation(0, 0);
+    engine.requestDirection(state, Direction.DOWN);
+    state.setFood(new Point(0, 0));
 
     engine.tick(state);
 
     assertEquals(GameMode.GAME_OVER, state.getMode());
+  }
+
+  @Test
+  void tickAllowsMovingToVacatedTailPosition() {
+    GameEngine engine = new GameEngine(new Random(42L));
+    GameState state = runningState(Snake.createFixed(5, 5));
+
+    // Grow snake to length 4 by eating food
+    state.setFood(new Point(5, 4));
+    engine.tick(state);
+    assertEquals(4, state.getSnake().getBody().size());
+
+    // Navigate a tight U-turn where head lands on the vacated tail position
+    state.setFood(new Point(0, 0));
+    engine.requestDirection(state, Direction.RIGHT);
+    engine.tick(state); // (6,4), (5,4), (5,5), (5,6)
+
+    engine.requestDirection(state, Direction.DOWN);
+    engine.tick(state); // (6,5), (6,4), (5,4), (5,5)
+
+    engine.requestDirection(state, Direction.LEFT);
+    engine.tick(state); // head → (5,5), old tail was at (5,5)
+
+    assertEquals(GameMode.RUNNING, state.getMode());
+    assertEquals(new Point(5, 5), state.getSnake().getHead());
   }
 
   @Test
@@ -126,8 +150,8 @@ class GameEngineTest {
 
     assertEquals(GameMode.RUNNING, state.getMode());
     assertEquals(Direction.UP, state.getDirection());
-    assertEquals(Direction.UP, state.getNextDirection());
+    assertEquals(Direction.UP, engine.getNextDirection());
     assertEquals(3, state.getSnake().getBody().size());
-    assertFalse(state.getSnake().containsPoint(state.getLemon()));
+    assertFalse(state.getSnake().containsPoint(state.getFood()));
   }
 }
