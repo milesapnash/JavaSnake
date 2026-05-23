@@ -20,7 +20,7 @@ public class FileHighScoreStore implements HighScoreStore {
         return -1;
       }
       return Integer.parseInt(value);
-    } catch (Exception ignored) {
+    } catch (IOException | NumberFormatException ignored) {
       return -1;
     }
   }

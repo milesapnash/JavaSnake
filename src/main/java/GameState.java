@@ -2,7 +2,7 @@ import java.awt.*;
 
 public class GameState {
   private Snake snake;
-  private final Point lemon = new Point();
+  private Point lemon = new Point();
   private Direction direction = Direction.UP;
   private GameMode mode = GameMode.RUNNING;
   private int highScore = -1;
@@ -16,7 +16,11 @@ public class GameState {
   }
 
   public Point getLemon() {
-    return lemon;
+    return new Point(lemon);
+  }
+
+  public void setLemon(Point lemon) {
+    this.lemon = new Point(lemon);
   }
 
   public Direction getDirection() {

@@ -70,7 +70,7 @@ public class GameEngine {
           random.nextInt(BoardConfig.PIXEL_HEIGHT)
       );
       if (!snake.containsPoint(candidate)) {
-        state.getLemon().setLocation(candidate);
+        state.setLemon(candidate);
         return;
       }
     }

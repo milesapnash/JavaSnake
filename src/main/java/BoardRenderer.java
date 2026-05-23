@@ -5,15 +5,11 @@ public class BoardRenderer {
   private static final Font CAPTION_FONT = new Font("Courier New", Font.BOLD, 24);
 
   public void paint(Graphics g, GameState state) {
-    if (state.getMode() == GameMode.GAME_OVER) {
-      paintGameOver(g, state);
-      return;
+    switch (state.getMode()) {
+      case GAME_OVER -> paintGameOver(g, state);
+      case PAUSED -> paintPause(g, state);
+      case RUNNING -> paintGameContent(g, state, Color.white, Color.yellow, Color.green);
     }
-    if (state.getMode() == GameMode.PAUSED) {
-      paintPause(g, state);
-      return;
-    }
-    paintPixels(g, state);
   }
 
   private void paintPause(Graphics g, GameState state) {
@@ -41,10 +37,6 @@ public class BoardRenderer {
     g.setColor(Color.white);
     g.setFont(CAPTION_FONT);
     g.drawString(captionOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(captionOutput)) / 2, BoardConfig.COMPONENT_HEIGHT * 5 / 8);
-  }
-
-  private void paintPixels(Graphics g, GameState state) {
-    paintGameContent(g, state, Color.white, Color.yellow, Color.green);
   }
 
   private void paintGameContent(Graphics g, GameState state, Color hudColor, Color lemonColor, Color snakeColor) {

@@ -9,6 +9,7 @@ import java.util.Set;
 public class Snake {
   private static final int INITIAL_LENGTH = 3;
   private final LinkedList<Point> body = new LinkedList<>();
+  private final List<Point> unmodifiableBody = Collections.unmodifiableList(body);
   private final Set<Point> occupied = new HashSet<>();
 
   public Snake(Random random, int width, int height) {
@@ -44,7 +45,7 @@ public class Snake {
   }
 
   public List<Point> getBody() {
-    return Collections.unmodifiableList(body);
+    return unmodifiableBody;
   }
 
   public boolean containsPoint(Point point) {
