@@ -18,11 +18,11 @@ public class GameState {
   }
 
   public Point getFood() {
-    return new Point(food);
+    return food;
   }
 
   public void setFood(Point food) {
-    this.food = new Point(food);
+    this.food = food;
   }
 
   public Direction getDirection() {

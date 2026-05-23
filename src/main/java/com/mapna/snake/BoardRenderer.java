@@ -23,25 +23,26 @@ public class BoardRenderer {
   }
 
   private void paintWon(Graphics g, GameState state) {
-    String scoreText = "SCORE: " + state.getSnake().growth();
-    String highScoreText = "HIGH SCORE: " + state.getHighScore();
-
     g.setColor(Color.green);
     paintTitles(g, "YOU WIN!", "-PRESS R TO RESTART-");
-    g.drawString(highScoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(highScoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
-    g.setColor(Color.yellow);
-    g.drawString(scoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(scoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
+    paintScoreOverlay(g, state);
   }
 
   private void paintGameOver(Graphics g, GameState state) {
+    g.setColor(Color.red);
+    paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
+    paintScoreOverlay(g, state);
+  }
+
+  private void paintScoreOverlay(Graphics g, GameState state) {
     String scoreText = "SCORE: " + state.getSnake().growth();
     String highScoreText = "HIGH SCORE: " + state.getHighScore();
 
-    g.setColor(Color.red);
-    paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
-    g.drawString(highScoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(highScoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
+    g.setFont(CAPTION_FONT);
+    g.setColor(Color.white);
+    g.drawString(highScoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics().stringWidth(highScoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
     g.setColor(Color.yellow);
-    g.drawString(scoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(scoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
+    g.drawString(scoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics().stringWidth(scoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
   }
 
   private void paintTitles(Graphics g, String title, String caption) {
