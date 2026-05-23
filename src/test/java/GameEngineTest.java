@@ -68,7 +68,7 @@ class GameEngineTest {
   void tickMovesHeadAccordingToNextDirection() {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(10, 10));
-    state.setLemon(new Point(0, 0));
+    state.setFood(new Point(0, 0));
 
     engine.tick(state);
 
@@ -80,7 +80,7 @@ class GameEngineTest {
   void tickWrapsVerticallyAtTopEdge() {
     GameEngine engine = new GameEngine(new Random(1L));
     GameState state = runningState(Snake.createFixed(10, 0));
-    state.setLemon(new Point(0, 0));
+    state.setFood(new Point(0, 0));
 
     engine.tick(state);
 
@@ -91,14 +91,14 @@ class GameEngineTest {
   void tickEatingFoodGrowsSnakeAndRespawnsFood() {
     GameEngine engine = new GameEngine(new Random(42L));
     GameState state = runningState(Snake.createFixed(10, 10));
-    state.setLemon(new Point(10, 9));
+    state.setFood(new Point(10, 9));
 
     engine.tick(state);
 
     assertEquals(new Point(10, 9), state.getSnake().getHead());
     assertEquals(4, state.getSnake().getBody().size());
     assertEquals(1, state.getSnake().growth());
-    assertFalse(state.getSnake().containsPoint(state.getLemon()));
+    assertFalse(state.getSnake().containsPoint(state.getFood()));
   }
 
   @Test
@@ -107,7 +107,7 @@ class GameEngineTest {
     GameState state = runningState(Snake.createFixed(5, 5));
     state.setDirection(Direction.DOWN);
     engine.requestDirection(state, Direction.DOWN);
-    state.setLemon(new Point(0, 0));
+    state.setFood(new Point(0, 0));
 
     engine.tick(state);
 
@@ -125,6 +125,6 @@ class GameEngineTest {
     assertEquals(Direction.UP, state.getDirection());
     assertEquals(Direction.UP, engine.getNextDirection());
     assertEquals(3, state.getSnake().getBody().size());
-    assertFalse(state.getSnake().containsPoint(state.getLemon()));
+    assertFalse(state.getSnake().containsPoint(state.getFood()));
   }
 }

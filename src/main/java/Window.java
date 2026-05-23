@@ -3,7 +3,6 @@ import java.awt.*;
 import java.net.URL;
 import java.nio.file.Path;
 
-/** A window to hold the game board inside. */
 public class Window extends JFrame {
   public Window() {
     super("JavaSnake");

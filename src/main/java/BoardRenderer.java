@@ -20,37 +20,37 @@ public class BoardRenderer {
   }
 
   private void paintGameOver(Graphics g, GameState state) {
-    String scoreOutput = "SCORE: " + state.getSnake().growth();
-    String highScoreOutput = "HIGH SCORE: " + state.getHighScore();
+    String scoreText = "SCORE: " + state.getSnake().growth();
+    String highScoreText = "HIGH SCORE: " + state.getHighScore();
 
     g.setColor(Color.red);
     paintTitles(g, "GAME OVER", "-PRESS R TO RESTART-");
-    g.drawString(highScoreOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(highScoreOutput)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
+    g.drawString(highScoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(highScoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
     g.setColor(Color.yellow);
-    g.drawString(scoreOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(scoreOutput)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
+    g.drawString(scoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(scoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
   }
 
-  private void paintTitles(Graphics g, String titleOutput, String captionOutput) {
+  private void paintTitles(Graphics g, String title, String caption) {
     g.setFont(TITLE_FONT);
-    g.drawString(titleOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(TITLE_FONT).stringWidth(titleOutput)) / 2, BoardConfig.COMPONENT_HEIGHT / 2);
+    g.drawString(title, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(TITLE_FONT).stringWidth(title)) / 2, BoardConfig.COMPONENT_HEIGHT / 2);
 
     g.setColor(Color.white);
     g.setFont(CAPTION_FONT);
-    g.drawString(captionOutput, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(captionOutput)) / 2, BoardConfig.COMPONENT_HEIGHT * 5 / 8);
+    g.drawString(caption, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(caption)) / 2, BoardConfig.COMPONENT_HEIGHT * 5 / 8);
   }
 
-  private void paintGameContent(Graphics g, GameState state, Color hudColor, Color lemonColor, Color snakeColor) {
+  private void paintGameContent(Graphics g, GameState state, Color hudColor, Color foodColor, Color snakeColor) {
     Graphics2D g2D = (Graphics2D) g;
 
     g2D.setPaint(hudColor);
     g2D.fillRect(0, BoardConfig.BOARD_HEIGHT, BoardConfig.BOARD_WIDTH, BoardConfig.HUD_ROWS * BoardConfig.PIXEL_SIZE);
 
     g2D.setPaint(Color.black);
-    translatePoints(g2D, state.getSnake().growth());
+    paintScore(g2D, state.getSnake().growth());
 
-    Point lemon = state.getLemon();
-    g2D.setPaint(lemonColor);
-    g2D.fillRect(lemon.x * BoardConfig.PIXEL_SIZE, lemon.y * BoardConfig.PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
+    Point food = state.getFood();
+    g2D.setPaint(foodColor);
+    g2D.fillRect(food.x * BoardConfig.PIXEL_SIZE, food.y * BoardConfig.PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
 
     g2D.setPaint(snakeColor);
     for (Point point : state.getSnake().getBody()) {
@@ -58,7 +58,7 @@ public class BoardRenderer {
     }
   }
 
-  private void translatePoints(Graphics2D g2D, int points) {
+  private void paintScore(Graphics2D g2D, int points) {
     String digits = Integer.toString(points);
     int digitWidth = 4 * BoardConfig.PIXEL_SIZE;
     int totalWidth = digits.length() * digitWidth - BoardConfig.PIXEL_SIZE;
@@ -68,8 +68,8 @@ public class BoardRenderer {
     }
   }
 
-  private void paintDigit(PixelDigit val, Graphics2D g2D, int startX) {
-    boolean[][] graphic = val.graphics;
+  private void paintDigit(PixelDigit digit, Graphics2D g2D, int startX) {
+    boolean[][] graphic = digit.graphics;
     for (int x = 0; x < 3; x++) {
       for (int y = 0; y < 5; y++) {
         if (graphic[y][x]) {

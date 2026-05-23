@@ -3,9 +3,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
-/** The snake, constructed in terms of the board size. */
 public class Snake {
   private static final int INITIAL_LENGTH = 3;
   private final LinkedList<Point> body = new LinkedList<>();
@@ -21,10 +21,7 @@ public class Snake {
     addSegment(new Point(x, y + 2));
   }
 
-  /**
-   * Creates a length-3 vertical snake: {@code (headX, headY)}, {@code (headX, headY + 1)}, {@code (headX, headY + 2)}.
-   * Intended for tests and deterministic setups.
-   */
+  /** Creates a length-3 vertical snake at the given head position. */
   public static Snake createFixed(int headX, int headY) {
     return new Snake(new Point(headX, headY), new Point(headX, headY + 1), new Point(headX, headY + 2));
   }
@@ -52,14 +49,13 @@ public class Snake {
     return occupied.contains(point);
   }
 
-  /** Determines if the snake's head is touching any other part of the body. */
   public boolean eatingSelf() {
     // Head occupies a duplicate position in the set only if it overlaps another segment.
     // Since the set deduplicates, a collision means the set is smaller than the list.
     return occupied.size() < body.size();
   }
 
-  /** Returns where the head would be after one step, without mutating state. */
+  /** Returns the next head position without mutating state. */
   public Point nextHead(Direction direction, int boardWidth, int boardHeight) {
     Point head = body.getFirst();
     return switch (direction) {
@@ -70,7 +66,6 @@ public class Snake {
     };
   }
 
-  /** Moves the snake one step in the given direction, wrapping around the board. Grows if specified. */
   public void move(Direction direction, int boardWidth, int boardHeight, boolean growing) {
     Point head = nextHead(direction, boardWidth, boardHeight);
     body.addFirst(head);
@@ -80,7 +75,6 @@ public class Snake {
     }
   }
 
-  /** Returns the difference in size of the body from the original length. */
   public int growth() {
     return body.size() - INITIAL_LENGTH;
   }

@@ -13,7 +13,6 @@ public class Board extends JPanel implements ActionListener {
   private final HighScoreStore highScoreStore = new FileHighScoreStore(BoardConfig.HIGHSCORE_FILE);
   private boolean highScoreSaved;
 
-  /** A board to display the game and deal with user input. */
   public Board() {
     addKeyListener(new DirectionAdapter());
     setPreferredSize(new Dimension(BoardConfig.BOARD_WIDTH, BoardConfig.COMPONENT_HEIGHT));
@@ -23,7 +22,6 @@ public class Board extends JPanel implements ActionListener {
     initBoard();
   }
 
-  /** Resets fields of the Board for a new game. */
   private void initBoard() {
     engine.reset(state);
     state.setHighScore(highScoreStore.load());
@@ -31,7 +29,6 @@ public class Board extends JPanel implements ActionListener {
     timer.start();
   }
 
-  /** Game management code, running with each tick. */
   @Override
   public void actionPerformed(ActionEvent e) {
     engine.tick(state);
@@ -45,34 +42,32 @@ public class Board extends JPanel implements ActionListener {
     repaint();
   }
 
-  /** Paints board or other output depending on current game state. */
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
     renderer.paint(g, state);
   }
 
-  /** Class to determine appropriate response to key presses. */
   private class DirectionAdapter extends KeyAdapter {
     @Override
     public void keyPressed(KeyEvent e) {
       switch (e.getKeyCode()) {
-        case (KeyEvent.VK_DOWN), (KeyEvent.VK_S) -> engine.requestDirection(state, Direction.DOWN);
-        case (KeyEvent.VK_UP), (KeyEvent.VK_W) -> engine.requestDirection(state, Direction.UP);
-        case (KeyEvent.VK_LEFT), (KeyEvent.VK_A) -> engine.requestDirection(state, Direction.LEFT);
-        case (KeyEvent.VK_RIGHT), (KeyEvent.VK_D) -> engine.requestDirection(state, Direction.RIGHT);
-        case (KeyEvent.VK_P) -> {
+        case KeyEvent.VK_DOWN, KeyEvent.VK_S -> engine.requestDirection(state, Direction.DOWN);
+        case KeyEvent.VK_UP, KeyEvent.VK_W -> engine.requestDirection(state, Direction.UP);
+        case KeyEvent.VK_LEFT, KeyEvent.VK_A -> engine.requestDirection(state, Direction.LEFT);
+        case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> engine.requestDirection(state, Direction.RIGHT);
+        case KeyEvent.VK_P -> {
           engine.togglePause(state);
           if (state.getMode() == GameMode.RUNNING) {
             timer.start();
           }
         }
-        case (KeyEvent.VK_R) -> {
+        case KeyEvent.VK_R -> {
           if (state.getMode() == GameMode.GAME_OVER) {
             initBoard();
           }
         }
-        case (KeyEvent.VK_ESCAPE) -> System.exit(0);
+        case KeyEvent.VK_ESCAPE -> System.exit(0);
       }
     }
   }

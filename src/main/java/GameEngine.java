@@ -47,7 +47,7 @@ public class GameEngine {
 
     Snake snake = state.getSnake();
     boolean growing = snake.nextHead(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT)
-        .equals(state.getLemon());
+        .equals(state.getFood());
 
     state.setDirection(nextDirection);
     snake.move(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT, growing);
@@ -70,7 +70,7 @@ public class GameEngine {
           random.nextInt(BoardConfig.PIXEL_HEIGHT)
       );
       if (!snake.containsPoint(candidate)) {
-        state.setLemon(candidate);
+        state.setFood(candidate);
         return;
       }
     }
