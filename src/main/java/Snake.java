@@ -1,5 +1,7 @@
 import java.awt.*;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 /** The snake, constructed in terms of the board size. */
@@ -34,8 +36,8 @@ public class Snake {
     return body.getFirst();
   }
 
-  public LinkedList<Point> getBody() {
-    return body;
+  public List<Point> getBody() {
+    return Collections.unmodifiableList(body);
   }
 
   public boolean containsPoint(Point point) {
@@ -52,17 +54,22 @@ public class Snake {
     return false;
   }
 
-  /**
-   * Moves each point of the snake's body to the preceding point's location. Adds a new point to the
-   * body if the snake is growing.
-   */
-  public void changePosition(boolean growing) {
+  /** Moves the snake one step in the given direction, wrapping around the board. Grows if specified. */
+  public void move(Direction direction, int boardWidth, int boardHeight, boolean growing) {
     Point tail = new Point(body.getLast());
     for (int i = body.size() - 1; i > 0; i--) {
       body.get(i).setLocation(body.get(i - 1));
     }
     if (growing) {
       body.add(tail);
+    }
+
+    Point head = body.getFirst();
+    switch (direction) {
+      case DOWN -> head.setLocation(head.x, (head.y + 1) % boardHeight);
+      case UP -> head.setLocation(head.x, (head.y - 1 + boardHeight) % boardHeight);
+      case LEFT -> head.setLocation((head.x - 1 + boardWidth) % boardWidth, head.y);
+      case RIGHT -> head.setLocation((head.x + 1) % boardWidth, head.y);
     }
   }
 

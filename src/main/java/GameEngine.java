@@ -41,12 +41,11 @@ public class GameEngine {
     }
 
     final Snake snake = state.getSnake();
-    final Point nextHead = nextHeadPosition(snake.getHead(), state.getNextDirection());
-    final boolean growing = nextHead.equals(state.getLemon());
+    final Direction direction = state.getNextDirection();
+    final boolean growing = nextHeadPosition(snake.getHead(), direction).equals(state.getLemon());
 
-    state.setDirection(state.getNextDirection());
-    snake.changePosition(growing);
-    snake.getHead().setLocation(nextHead);
+    state.setDirection(direction);
+    snake.move(direction, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT, growing);
 
     if (snake.eatingSelf()) {
       state.setMode(GameMode.GAME_OVER);
