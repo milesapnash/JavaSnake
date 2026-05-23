@@ -54,8 +54,20 @@ public class Snake {
     return false;
   }
 
+  /** Returns where the head would be after one step, without mutating state. */
+  public Point nextHead(Direction direction, int boardWidth, int boardHeight) {
+    Point head = body.getFirst();
+    return switch (direction) {
+      case DOWN -> new Point(head.x, (head.y + 1) % boardHeight);
+      case UP -> new Point(head.x, (head.y - 1 + boardHeight) % boardHeight);
+      case LEFT -> new Point((head.x - 1 + boardWidth) % boardWidth, head.y);
+      case RIGHT -> new Point((head.x + 1) % boardWidth, head.y);
+    };
+  }
+
   /** Moves the snake one step in the given direction, wrapping around the board. Grows if specified. */
   public void move(Direction direction, int boardWidth, int boardHeight, boolean growing) {
+    Point next = nextHead(direction, boardWidth, boardHeight);
     Point tail = new Point(body.getLast());
     for (int i = body.size() - 1; i > 0; i--) {
       body.get(i).setLocation(body.get(i - 1));
@@ -63,14 +75,7 @@ public class Snake {
     if (growing) {
       body.add(tail);
     }
-
-    Point head = body.getFirst();
-    switch (direction) {
-      case DOWN -> head.setLocation(head.x, (head.y + 1) % boardHeight);
-      case UP -> head.setLocation(head.x, (head.y - 1 + boardHeight) % boardHeight);
-      case LEFT -> head.setLocation((head.x - 1 + boardWidth) % boardWidth, head.y);
-      case RIGHT -> head.setLocation((head.x + 1) % boardWidth, head.y);
-    }
+    body.getFirst().setLocation(next);
   }
 
   /** Returns the difference in size of the body from the original length. */

@@ -42,7 +42,8 @@ public class GameEngine {
 
     final Snake snake = state.getSnake();
     final Direction direction = state.getNextDirection();
-    final boolean growing = nextHeadPosition(snake.getHead(), direction).equals(state.getLemon());
+    final boolean growing = snake.nextHead(direction, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT)
+        .equals(state.getLemon());
 
     state.setDirection(direction);
     snake.move(direction, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT, growing);
@@ -55,20 +56,6 @@ public class GameEngine {
     if (growing) {
       spawnFood(state);
     }
-  }
-
-  private Point nextHeadPosition(Point head, Direction direction) {
-    int nextX = head.x;
-    int nextY = head.y;
-
-    switch (direction) {
-      case DOWN -> nextY = (nextY + 1) % BoardConfig.PIXEL_HEIGHT;
-      case UP -> nextY = (nextY - 1 + BoardConfig.PIXEL_HEIGHT) % BoardConfig.PIXEL_HEIGHT;
-      case LEFT -> nextX = (nextX - 1 + BoardConfig.PIXEL_WIDTH) % BoardConfig.PIXEL_WIDTH;
-      case RIGHT -> nextX = (nextX + 1) % BoardConfig.PIXEL_WIDTH;
-    }
-
-    return new Point(nextX, nextY);
   }
 
   private void spawnFood(GameState state) {
