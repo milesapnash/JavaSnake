@@ -67,15 +67,10 @@ public class Snake {
 
   /** Moves the snake one step in the given direction, wrapping around the board. Grows if specified. */
   public void move(Direction direction, int boardWidth, int boardHeight, boolean growing) {
-    Point next = nextHead(direction, boardWidth, boardHeight);
-    Point tail = new Point(body.getLast());
-    for (int i = body.size() - 1; i > 0; i--) {
-      body.get(i).setLocation(body.get(i - 1));
+    body.addFirst(nextHead(direction, boardWidth, boardHeight));
+    if (!growing) {
+      body.removeLast();
     }
-    if (growing) {
-      body.add(tail);
-    }
-    body.getFirst().setLocation(next);
   }
 
   /** Returns the difference in size of the body from the original length. */
