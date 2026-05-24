@@ -1,9 +1,9 @@
 package com.mapna.snake;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Toolkit;
 import java.net.URL;
 import java.nio.file.Path;
+import javax.swing.JFrame;
 
 public class Window extends JFrame {
   public Window() {

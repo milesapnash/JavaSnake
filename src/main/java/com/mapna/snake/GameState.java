@@ -1,6 +1,6 @@
 package com.mapna.snake;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class GameState {
   private Snake snake;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <!-- Swing components are Serializable but never serialized in this app -->
+  <Match>
+    <Class name="com.mapna.snake.Board"/>
+    <Bug pattern="SE_BAD_FIELD"/>
+  </Match>
+
+  <!-- Mutable Point sharing is intentional for game loop performance -->
+  <Match>
+    <Package name="com.mapna.snake"/>
+    <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+  </Match>
+</FindBugsFilter>
