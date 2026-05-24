@@ -38,22 +38,28 @@ Run unit tests:
 mvn test
 ```
 
+Run tests with Checkstyle and SpotBugs checks:
+
+```bash
+mvn verify
+```
+
 ### Without Maven
 
 If you only have the JDK, compile every `.java` file under `src/main/java`, then run `Game`:
 
-**macOS / Linux (shell expands the glob):**
+**macOS / Linux:**
 
 ```bash
-javac -d out -encoding UTF-8 src/main/java/*.java
-java -cp out Game
+javac -d out -encoding UTF-8 src/main/java/com/mapna/snake/*.java
+java -cp out com.mapna.snake.Game
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-javac -d out -encoding UTF-8 (Get-ChildItem -Path src\main\java\*.java).FullName
-java -cp out Game
+javac -d out -encoding UTF-8 (Get-ChildItem -Recurse -Path src\main\java\*.java).FullName
+java -cp out com.mapna.snake.Game
 ```
 
 The window icon loads from the classpath when run via Maven; with plain `javac`/`java`, the app falls back to `src/main/resources/images/icon.png` on disk.
@@ -64,7 +70,7 @@ The window icon loads from the classpath when run via Maven; with plain `javac`/
 |--------|------|
 | Move | **W A S D** or **arrow keys** |
 | Pause / resume | **P** |
-| Restart (after game over) | **R** |
+| Restart (after game over or win) | **R** |
 | Quit | **Esc** |
 
 ## Screenshots
@@ -86,6 +92,10 @@ The window icon loads from the classpath when run via Maven; with plain `javac`/
 (**R** to restart, **Esc** to close.)
 
 ![Game over screenshot](docs/images/screenshot3.png)
+
+## Gameplay
+
+The snake speeds up as it grows — after eating 10 pieces of food the tick rate begins to decrease, making the game progressively harder. Fill the entire board to win.
 
 ## High score
 
