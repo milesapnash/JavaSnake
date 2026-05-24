@@ -32,12 +32,14 @@ public class Board extends JPanel implements ActionListener {
     engine.reset(state);
     state.setHighScore(highScoreStore.load());
     highScoreSaved = false;
+    timer.setDelay(BoardConfig.TICK_RATE_MS);
     timer.start();
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     engine.tick(state);
+    timer.setDelay(BoardConfig.tickRateMs(state.getSnake().growth()));
     if (state.getMode() == GameMode.PAUSED || state.getMode() == GameMode.GAME_OVER || state.getMode() == GameMode.WON) {
       timer.stop();
     }
