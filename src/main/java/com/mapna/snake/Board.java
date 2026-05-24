@@ -74,6 +74,7 @@ public class Board extends JPanel implements ActionListener {
           }
         }
         case KeyEvent.VK_ESCAPE -> SwingUtilities.getWindowAncestor(Board.this).dispose();
+        default -> { }
       }
     }
   }
