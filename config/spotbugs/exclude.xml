@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <!-- Swing components are Serializable but never serialized in this app -->
+  <Match>
+    <Class name="com.mapna.snake.Board"/>
+    <Bug pattern="SE_BAD_FIELD,SE_BAD_FIELD_STORE"/>
+  </Match>
+
+  <!-- GameState is a mutable state holder — sharing the Snake reference is intentional -->
+  <Match>
+    <Class name="com.mapna.snake.GameState"/>
+    <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+  </Match>
+
+</FindBugsFilter>

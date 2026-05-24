@@ -1,6 +1,9 @@
 package com.mapna.snake;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class BoardRenderer {
   private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 64);
@@ -40,18 +43,22 @@ public class BoardRenderer {
 
     g.setFont(CAPTION_FONT);
     g.setColor(Color.white);
-    g.drawString(highScoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics().stringWidth(highScoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 4);
+    int hsX = (BoardConfig.BOARD_WIDTH - g.getFontMetrics().stringWidth(highScoreText)) / 2;
+    g.drawString(highScoreText, hsX, BoardConfig.COMPONENT_HEIGHT / 4);
     g.setColor(Color.yellow);
-    g.drawString(scoreText, (BoardConfig.BOARD_WIDTH - g.getFontMetrics().stringWidth(scoreText)) / 2, BoardConfig.COMPONENT_HEIGHT / 8);
+    int scoreX = (BoardConfig.BOARD_WIDTH - g.getFontMetrics().stringWidth(scoreText)) / 2;
+    g.drawString(scoreText, scoreX, BoardConfig.COMPONENT_HEIGHT / 8);
   }
 
   private void paintTitles(Graphics g, String title, String caption) {
     g.setFont(TITLE_FONT);
-    g.drawString(title, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(TITLE_FONT).stringWidth(title)) / 2, BoardConfig.COMPONENT_HEIGHT / 2);
+    int titleX = (BoardConfig.BOARD_WIDTH - g.getFontMetrics(TITLE_FONT).stringWidth(title)) / 2;
+    g.drawString(title, titleX, BoardConfig.COMPONENT_HEIGHT / 2);
 
     g.setColor(Color.white);
     g.setFont(CAPTION_FONT);
-    g.drawString(caption, (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(caption)) / 2, BoardConfig.COMPONENT_HEIGHT * 5 / 8);
+    int captionX = (BoardConfig.BOARD_WIDTH - g.getFontMetrics(CAPTION_FONT).stringWidth(caption)) / 2;
+    g.drawString(caption, captionX, BoardConfig.COMPONENT_HEIGHT * 5 / 8);
   }
 
   private void paintGameContent(Graphics g, GameState state, Color hudColor, Color foodColor, Color snakeColor) {
@@ -63,13 +70,15 @@ public class BoardRenderer {
     g2D.setPaint(Color.black);
     paintScore(g2D, state.getSnake().growth());
 
-    Point food = state.getFood();
+    Position food = state.getFood();
     g2D.setPaint(foodColor);
-    g2D.fillRect(food.x * BoardConfig.PIXEL_SIZE, food.y * BoardConfig.PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
+    g2D.fillRect(food.x() * BoardConfig.PIXEL_SIZE, food.y() * BoardConfig.PIXEL_SIZE,
+        BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
 
     g2D.setPaint(snakeColor);
-    for (Point point : state.getSnake().getBody()) {
-      g2D.fillRect(point.x * BoardConfig.PIXEL_SIZE, point.y * BoardConfig.PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
+    for (Position point : state.getSnake().getBody()) {
+      g2D.fillRect(point.x() * BoardConfig.PIXEL_SIZE, point.y() * BoardConfig.PIXEL_SIZE,
+          BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
     }
   }
 

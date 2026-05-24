@@ -1,11 +1,15 @@
 package com.mapna.snake;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 public class Board extends JPanel implements ActionListener {
   private final Timer timer = new Timer(BoardConfig.TICK_RATE_MS, this);
@@ -28,12 +32,14 @@ public class Board extends JPanel implements ActionListener {
     engine.reset(state);
     state.setHighScore(highScoreStore.load());
     highScoreSaved = false;
+    timer.setDelay(BoardConfig.TICK_RATE_MS);
     timer.start();
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     engine.tick(state);
+    timer.setDelay(BoardConfig.tickRateMs(state.getSnake().growth()));
     if (state.getMode() == GameMode.PAUSED || state.getMode() == GameMode.GAME_OVER || state.getMode() == GameMode.WON) {
       timer.stop();
     }
@@ -70,6 +76,7 @@ public class Board extends JPanel implements ActionListener {
           }
         }
         case KeyEvent.VK_ESCAPE -> SwingUtilities.getWindowAncestor(Board.this).dispose();
+        default -> { }
       }
     }
   }
