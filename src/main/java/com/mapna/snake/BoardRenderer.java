@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 
 public class BoardRenderer {
   private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 64);
@@ -71,14 +70,14 @@ public class BoardRenderer {
     g2D.setPaint(Color.black);
     paintScore(g2D, state.getSnake().growth());
 
-    Point food = state.getFood();
+    Position food = state.getFood();
     g2D.setPaint(foodColor);
-    g2D.fillRect(food.x * BoardConfig.PIXEL_SIZE, food.y * BoardConfig.PIXEL_SIZE,
+    g2D.fillRect(food.x() * BoardConfig.PIXEL_SIZE, food.y() * BoardConfig.PIXEL_SIZE,
         BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
 
     g2D.setPaint(snakeColor);
-    for (Point point : state.getSnake().getBody()) {
-      g2D.fillRect(point.x * BoardConfig.PIXEL_SIZE, point.y * BoardConfig.PIXEL_SIZE,
+    for (Position point : state.getSnake().getBody()) {
+      g2D.fillRect(point.x() * BoardConfig.PIXEL_SIZE, point.y() * BoardConfig.PIXEL_SIZE,
           BoardConfig.BORDERED_PIXEL_SIZE, BoardConfig.BORDERED_PIXEL_SIZE);
     }
   }

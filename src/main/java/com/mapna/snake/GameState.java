@@ -1,10 +1,8 @@
 package com.mapna.snake;
 
-import java.awt.Point;
-
 public class GameState {
   private Snake snake;
-  private Point food = new Point();
+  private Position food = new Position(0, 0);
   private Direction direction = Direction.UP;
   private GameMode mode = GameMode.RUNNING;
   private int highScore = -1;
@@ -17,11 +15,11 @@ public class GameState {
     this.snake = snake;
   }
 
-  public Point getFood() {
+  public Position getFood() {
     return food;
   }
 
-  public void setFood(Point food) {
+  public void setFood(Position food) {
     this.food = food;
   }
 

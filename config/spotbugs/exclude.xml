@@ -6,9 +6,4 @@
     <Bug pattern="SE_BAD_FIELD"/>
   </Match>
 
-  <!-- Mutable Point sharing is intentional for game loop performance -->
-  <Match>
-    <Package name="com.mapna.snake"/>
-    <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
-  </Match>
 </FindBugsFilter>

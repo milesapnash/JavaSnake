@@ -1,6 +1,5 @@
 package com.mapna.snake;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -50,7 +49,7 @@ public class GameEngine {
     }
 
     Snake snake = state.getSnake();
-    Point head = snake.nextHead(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT);
+    Position head = snake.nextHead(nextDirection, BoardConfig.PIXEL_WIDTH, BoardConfig.PIXEL_HEIGHT);
     boolean growing = head.equals(state.getFood());
 
     state.setDirection(nextDirection);
@@ -72,11 +71,11 @@ public class GameEngine {
 
   private void spawnFood(GameState state) {
     Snake snake = state.getSnake();
-    List<Point> free = new ArrayList<>();
+    List<Position> free = new ArrayList<>();
     for (int x = 0; x < BoardConfig.PIXEL_WIDTH; x++) {
       for (int y = 0; y < BoardConfig.PIXEL_HEIGHT; y++) {
-        Point p = new Point(x, y);
-        if (!snake.containsPoint(p)) {
+        Position p = new Position(x, y);
+        if (!snake.contains(p)) {
           free.add(p);
         }
       }
